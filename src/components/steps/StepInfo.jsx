@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useShopify, shopifyIsConfigured, ringVariantMapped } from '../../useShopify'
 
-const RAILWAY_URL = 'https://web-production-4c84.up.railway.app'
+const RAILWAY_URL = 'https://chai-api-production.up.railway.app'
 
 export default function StepInfo({ order, form, onFormChange, status, onSubmit }){
   const { design, outerColor, innerColor, companionLink, frequency, size } = order
