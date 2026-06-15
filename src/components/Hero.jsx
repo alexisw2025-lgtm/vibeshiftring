@@ -14,7 +14,7 @@ export default function Hero(){
           </p>
           <div className="hero-ctas">
             <a href="#configurator" className="btn btn-primary">Build Your Ring</a>
-            <a href="#configurator" className="btn-text">How it works</a>
+            <a href="#how-it-works" className="btn-text">How it works</a>
           </div>
         </div>
         <div className="hero-art">

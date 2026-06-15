@@ -596,3 +596,28 @@ footer{
 .link-option.active .link-check{ background:var(--gold); border-color:var(--gold); color:var(--parch); }
 .link-url-box{ margin-top:12px; cursor:default; }
 .link-url-box input{ font-size:.86rem; }
+
+/* ================= HOW IT WORKS ================= */
+.how-grid{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:24px;
+}
+.how-card{
+  background:var(--parch); border:1px solid rgba(212,201,184,.6); border-radius:18px;
+  padding:28px 24px; box-shadow:var(--shadow-soft); transition:.25s;
+}
+.how-card:hover{ box-shadow:var(--shadow-lift); transform:translateY(-4px); border-color:var(--gold); }
+.how-icon{
+  font-size:1.7rem; margin-bottom:14px;
+  width:52px; height:52px; border-radius:50%;
+  background:var(--gold-p); display:flex; align-items:center; justify-content:center;
+  box-shadow:var(--shadow-soft);
+}
+.how-card h4{ font-size:1.05rem; margin-bottom:8px; }
+.how-card p{ font-size:.86rem; line-height:1.65; color:var(--bark); font-weight:300; margin:0; }
+
+@media (max-width:880px){
+  .how-grid{ grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width:560px){
+  .how-grid{ grid-template-columns:1fr; }
+}
