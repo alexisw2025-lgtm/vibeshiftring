@@ -454,6 +454,25 @@ footer{
   margin-top:56px; padding-top:32px; border-top:1px solid rgba(212,201,184,.6);
 }
 
+@keyframes pulse-cta{
+  0%, 100%{
+    box-shadow:var(--glow-gold);
+    transform:translateY(0) scale(1);
+    background:var(--bark);
+  }
+  50%{
+    box-shadow:0 0 0 14px rgba(196,137,58,.28), 0 16px 44px -16px rgba(196,137,58,.55);
+    transform:translateY(0) scale(1.045);
+    background:#5C4128;
+  }
+}
+.wizard-nav .btn-primary.pulse{
+  animation:pulse-cta 1.6s ease-in-out infinite;
+}
+.wizard-nav .btn-primary.pulse:hover{
+  animation-play-state:paused;
+}
+
 /* ================= COLOR STEP ================= */
 .color-preview-row{
   display:flex; align-items:center; gap:32px; justify-content:center;

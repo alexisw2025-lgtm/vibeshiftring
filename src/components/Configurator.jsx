@@ -109,7 +109,7 @@ export default function Wizard(){
               ← Back
             </button>
             {step < 5 && (
-              <button type="button" className="btn btn-primary" onClick={next} disabled={!canAdvance}>
+              <button type="button" className={`btn btn-primary ${canAdvance ? 'pulse' : ''}`} onClick={next} disabled={!canAdvance}>
                 Continue →
               </button>
             )}
