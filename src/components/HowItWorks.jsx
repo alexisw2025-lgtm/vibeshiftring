@@ -12,7 +12,7 @@ const FEATURES = [
   {
     icon: '✨',
     title: 'Meridian Infused',
-    desc: "After printing, every ring receives our proprietary Meridian Infusion Frequency finishing process. Intention in every piece.",
+    desc: "After crafting, every ring receives our proprietary Meridian Infusion Frequency finishing process. Intention in every piece.",
   },
   {
     icon: '🔗',
