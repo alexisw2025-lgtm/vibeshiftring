@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import { useShopify, shopifyIsConfigured, ringVariantMapped } from '../../useShopify'
+
 const RAILWAY_URL = 'https://web-production-4c84.up.railway.app'
 
 export default function StepInfo({ order, form, onFormChange, status, onSubmit }){
@@ -5,7 +8,39 @@ export default function StepInfo({ order, form, onFormChange, status, onSubmit }
   const isCustom = design?.id === 'custom'
   const isAsShown = outerColor?.asShown
 
+  const { configured, loading: shopifyLoading, error: shopifyError, addRingToCart, goToCheckout } = useShopify()
+  const [shopifyStatus, setShopifyStatus] = useState('idle') // idle | loading | error
+
+  const canShopifyCheckout = !isCustom && shopifyIsConfigured() && ringVariantMapped(design?.name)
+
   const update = (field) => (e) => onFormChange({ ...form, [field]: e.target.value })
+
+  const colorsLabel = isAsShown
+    ? 'As shown in photos'
+    : isCustom
+      ? (outerColor ? `${outerColor.name} / ${innerColor?.name || outerColor.name}` : 'See notes')
+      : `${outerColor?.name} outer · ${innerColor?.name} inner`
+
+  const buildAttributes = () => {
+    const attrs = [
+      { key: 'Colors', value: colorsLabel },
+      { key: 'Frequency', value: `${frequency?.hz} Hz — ${frequency?.name}` },
+      { key: 'Ring Size (US)', value: String(size) },
+    ]
+    if (form.notes?.trim()) attrs.push({ key: 'Notes', value: form.notes.trim() })
+    if (form.shipTo?.trim()) attrs.push({ key: 'Ship to', value: form.shipTo.trim() })
+    return attrs
+  }
+
+  const handleShopifyCheckout = async () => {
+    setShopifyStatus('loading')
+    const url = await addRingToCart(design.name, buildAttributes())
+    if (url) {
+      goToCheckout(url)
+    } else {
+      setShopifyStatus('error')
+    }
+  }
 
   if(status === 'success'){
     return (
@@ -30,7 +65,7 @@ export default function StepInfo({ order, form, onFormChange, status, onSubmit }
       <div className="step-head">
         <div className="eyebrow">STEP 5 OF 5</div>
         <h2>Bring it all together.</h2>
-        <p>Confirm your selections and leave your details — no payment is collected here.</p>
+        <p>Confirm your selections, then check out securely on chaiholistic.com.</p>
       </div>
 
       <div className="reserve-grid">
@@ -44,13 +79,7 @@ export default function StepInfo({ order, form, onFormChange, status, onSubmit }
 
           <div className="summary-row">
             <span className="summary-label">Colors</span>
-            <span className="summary-value">
-              {isAsShown
-                ? 'As shown in photos'
-                : isCustom
-                  ? (outerColor ? `${outerColor.name} / ${innerColor?.name || outerColor.name}` : 'See notes')
-                  : `${outerColor?.name} outer · ${innerColor?.name} inner`}
-            </span>
+            <span className="summary-value">{colorsLabel}</span>
           </div>
 
           <div className="summary-row">
@@ -62,10 +91,40 @@ export default function StepInfo({ order, form, onFormChange, status, onSubmit }
             <span className="summary-label">Size</span>
             <span className="summary-value">US {size}</span>
           </div>
+
+          {canShopifyCheckout && (
+            <>
+              <button
+                type="button"
+                className="btn btn-primary"
+                style={{marginTop:24, width:'100%'}}
+                onClick={handleShopifyCheckout}
+                disabled={shopifyLoading}
+              >
+                {shopifyLoading ? 'Preparing checkout…' : `Checkout — $${design.price}`}
+              </button>
+              <p style={{fontSize:'.78rem', color:'var(--muted)', marginTop:10, marginBottom:0}}>
+                You'll complete payment securely on chaiholistic.com.
+                Your colors, frequency, and size are included with the order.
+              </p>
+              {shopifyStatus === 'error' && (
+                <p style={{color:'#a33', fontSize:'.85rem', marginTop:10}}>
+                  {shopifyError || 'Something went wrong starting checkout — please try again.'}
+                </p>
+              )}
+            </>
+          )}
+
+          {!canShopifyCheckout && !isCustom && (
+            <p style={{fontSize:'.78rem', color:'var(--muted)', marginTop:24, marginBottom:0}}>
+              Online checkout for this design is being set up. Send a
+              request below and we'll follow up to arrange payment.
+            </p>
+          )}
         </div>
 
         <form className="reserve-form" onSubmit={onSubmit}>
-          <h4>Your information</h4>
+          <h4>{canShopifyCheckout ? 'Prefer we contact you first?' : 'Your information'}</h4>
 
           <div className="form-row">
             <div>
@@ -100,7 +159,7 @@ export default function StepInfo({ order, form, onFormChange, status, onSubmit }
             onChange={update('notes')}
           />
 
-          <button type="submit" className="btn btn-primary" disabled={status==='sending'} style={{marginTop:18, width:'100%'}}>
+          <button type="submit" className={`btn ${canShopifyCheckout ? 'btn-ghost' : 'btn-primary'}`} disabled={status==='sending'} style={{marginTop:18, width:'100%'}}>
             {status === 'sending' ? 'Sending…' : 'Request This Ring'}
           </button>
 
@@ -112,8 +171,9 @@ export default function StepInfo({ order, form, onFormChange, status, onSubmit }
           )}
 
           <p style={{fontSize:'.78rem', color:'var(--muted)', marginTop:14}}>
-            No payment is collected here. We'll confirm pricing and timeline
-            with you directly before your ring is made.
+            {canShopifyCheckout
+              ? "No payment is collected here — we'll reach out to arrange next steps."
+              : "No payment is collected here. We'll confirm pricing and timeline with you directly before your ring is made."}
           </p>
         </form>
       </div>
