@@ -12,8 +12,8 @@ export default function Hero(){
           Made to order, one ring at a time.
         </p>
         <div className="hero-ctas">
-          <a href="#reserve" className="btn btn-primary">Build Your Ring</a>
-          <a href="#frequencies" className="btn-text">Explore Frequencies</a>
+          <a href="#configurator" className="btn btn-primary">Build Your Ring</a>
+          <a href="#configurator" className="btn-text">How it works</a>
         </div>
       </div>
       <div className="hero-art">
