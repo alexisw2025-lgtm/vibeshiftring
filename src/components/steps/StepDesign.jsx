@@ -6,7 +6,7 @@ export default function StepDesign({ value, onChange }){
   return (
     <div>
       <div className="step-head">
-        <div className="eyebrow">STEP 1 OF 5</div>
+        <div className="eyebrow">STEP 1 OF 6</div>
         <h2>Choose your design.</h2>
         <p>Each ring is hand-finished and infused to order — made just for you.</p>
       </div>

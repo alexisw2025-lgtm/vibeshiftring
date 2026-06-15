@@ -5,7 +5,7 @@ export default function StepSize({ value, onChange }){
   return (
     <div>
       <div className="step-head">
-        <div className="eyebrow">STEP 4 OF 5</div>
+        <div className="eyebrow">STEP 5 OF 6</div>
         <h2>Choose your size.</h2>
         <p>True to standard US ring sizing (5–15). No sizer? See the guide below.</p>
       </div>

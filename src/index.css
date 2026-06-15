@@ -449,9 +449,16 @@ footer{
 .step-head h2{ font-size:2.4rem; margin:16px 0 18px; line-height:1.12; }
 .step-head p{ font-size:1rem; line-height:1.75; font-weight:300; }
 
+.wizard-nav-bar{
+  position:sticky; bottom:0; z-index:50;
+  background:var(--linen);
+  border-top:1px solid rgba(212,201,184,.6);
+  box-shadow:0 -14px 34px -18px rgba(61,43,31,.22);
+  margin-top:56px;
+}
 .wizard-nav{
   display:flex; justify-content:space-between; align-items:center;
-  margin-top:56px; padding-top:32px; border-top:1px solid rgba(212,201,184,.6);
+  padding:18px 32px;
 }
 
 @keyframes pulse-cta{
@@ -551,3 +558,41 @@ footer{
 @media (max-width:560px){
   .size-grid-big{ grid-template-columns:repeat(4,1fr); }
 }
+
+
+/* ================= COMPANION LINK STEP ================= */
+.link-options{ display:flex; flex-direction:column; gap:14px; max-width:680px; margin:0 auto; }
+.link-option{
+  display:flex; align-items:flex-start; gap:16px;
+  background:var(--parch); border:1px solid rgba(212,201,184,.6); border-radius:16px;
+  padding:20px 22px; cursor:pointer; transition:.2s;
+  box-shadow:var(--shadow-soft);
+}
+.link-option:hover{ border-color:var(--gold); box-shadow:var(--shadow-lift); }
+.link-option.active{ border-color:var(--gold); background:var(--gold-p); box-shadow:var(--glow-gold); }
+.link-icon{
+  font-size:1.4rem; flex-shrink:0; width:40px; height:40px; border-radius:50%;
+  background:var(--linen); display:flex; align-items:center; justify-content:center;
+}
+.link-option.active .link-icon{ background:var(--parch); }
+.link-body{ flex:1; }
+.link-body h4{ font-size:1.05rem; margin-bottom:6px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.link-body p{ font-size:.86rem; line-height:1.6; color:var(--bark); font-weight:300; margin-bottom:8px; }
+.link-tag{
+  font-family:'Space Grotesk',sans-serif; font-size:.68rem; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--gold); font-weight:600;
+}
+.link-price{
+  font-family:'Space Grotesk',sans-serif; font-size:.68rem; letter-spacing:.06em;
+  background:rgba(196,137,58,.18); color:var(--gold); padding:3px 9px; border-radius:20px;
+  font-weight:600;
+}
+.link-check{
+  flex-shrink:0; width:24px; height:24px; border-radius:50%;
+  border:1.5px solid rgba(212,201,184,.8); background:var(--parch);
+  display:flex; align-items:center; justify-content:center;
+  font-size:.78rem; color:var(--parch); margin-top:2px;
+}
+.link-option.active .link-check{ background:var(--gold); border-color:var(--gold); color:var(--parch); }
+.link-url-box{ margin-top:12px; cursor:default; }
+.link-url-box input{ font-size:.86rem; }

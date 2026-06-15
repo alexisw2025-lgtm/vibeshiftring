@@ -1,4 +1,4 @@
-const STEPS = ['Design', 'Colors', 'Frequency', 'Size', 'Your Info']
+const STEPS = ['Design', 'Colors', 'Link', 'Frequency', 'Size', 'Your Info']
 
 export default function StepIndicator({ current, maxReached, onJump }){
   return (

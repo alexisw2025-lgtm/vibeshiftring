@@ -4,7 +4,7 @@ import { useShopify, shopifyIsConfigured, ringVariantMapped } from '../../useSho
 const RAILWAY_URL = 'https://web-production-4c84.up.railway.app'
 
 export default function StepInfo({ order, form, onFormChange, status, onSubmit }){
-  const { design, outerColor, innerColor, frequency, size } = order
+  const { design, outerColor, innerColor, companionLink, frequency, size } = order
   const isCustom = design?.id === 'custom'
   const isAsShown = outerColor?.asShown
 
@@ -15,6 +15,17 @@ export default function StepInfo({ order, form, onFormChange, status, onSubmit }
 
   const update = (field) => (e) => onFormChange({ ...form, [field]: e.target.value })
 
+  const linkLabel = companionLink?.type === 'affirmation'
+    ? 'Daily Affirmation (Included)'
+    : companionLink?.type === 'default'
+      ? '2AM Companion Prayer (Included)'
+      : companionLink?.type === 'custom'
+        ? `Personalized Link — ${companionLink.url} (+$6.00)`
+        : ''
+
+  const linkSurcharge = companionLink?.type === 'custom' ? 6 : 0
+  const totalPrice = (design?.price || 0) + linkSurcharge
+
   const colorsLabel = isAsShown
     ? 'As shown in photos'
     : isCustom
@@ -24,6 +35,7 @@ export default function StepInfo({ order, form, onFormChange, status, onSubmit }
   const buildAttributes = () => {
     const attrs = [
       { key: 'Colors', value: colorsLabel },
+      { key: 'Companion Link', value: linkLabel },
       { key: 'Frequency', value: `${frequency?.hz} Hz — ${frequency?.name}` },
       { key: 'Ring Size (US)', value: String(size) },
     ]
@@ -63,7 +75,7 @@ export default function StepInfo({ order, form, onFormChange, status, onSubmit }
   return (
     <div>
       <div className="step-head">
-        <div className="eyebrow">STEP 5 OF 5</div>
+        <div className="eyebrow">STEP 6 OF 6</div>
         <h2>Bring it all together.</h2>
         <p>Confirm your selections, then check out securely on chaiholistic.com.</p>
       </div>
@@ -80,6 +92,11 @@ export default function StepInfo({ order, form, onFormChange, status, onSubmit }
           <div className="summary-row">
             <span className="summary-label">Colors</span>
             <span className="summary-value">{colorsLabel}</span>
+          </div>
+
+          <div className="summary-row">
+            <span className="summary-label">Companion Link</span>
+            <span className="summary-value">{linkLabel}</span>
           </div>
 
           <div className="summary-row">
@@ -101,11 +118,12 @@ export default function StepInfo({ order, form, onFormChange, status, onSubmit }
                 onClick={handleShopifyCheckout}
                 disabled={shopifyLoading}
               >
-                {shopifyLoading ? 'Preparing checkout…' : `Checkout — $${design.price}`}
+                {shopifyLoading ? 'Preparing checkout…' : `Checkout — $${totalPrice}`}
               </button>
               <p style={{fontSize:'.78rem', color:'var(--muted)', marginTop:10, marginBottom:0}}>
                 You'll complete payment securely on chaiholistic.com.
-                Your colors, frequency, and size are included with the order.
+                Your colors, companion link, frequency, and size are included with the order.
+                {linkSurcharge > 0 && ' The $6 personalized link add-on is included in this total.'}
               </p>
               {shopifyStatus === 'error' && (
                 <p style={{color:'#a33', fontSize:'.85rem', marginTop:10}}>

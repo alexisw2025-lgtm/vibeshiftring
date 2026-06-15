@@ -33,7 +33,7 @@ export default function StepFrequency({ value, onChange }){
   return (
     <div>
       <div className="step-head">
-        <div className="eyebrow">STEP 3 OF 5</div>
+        <div className="eyebrow">STEP 4 OF 6</div>
         <h2>Choose your frequency.</h2>
         <p>Turn the dial — each of the nine carries a different intention.</p>
       </div>

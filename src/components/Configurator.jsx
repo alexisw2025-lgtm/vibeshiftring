@@ -2,10 +2,13 @@ import { useState } from 'react'
 import StepIndicator from './StepIndicator'
 import StepDesign from './steps/StepDesign'
 import StepColors from './steps/StepColors'
+import StepLink from './steps/StepLink'
 import StepFrequency from './steps/StepFrequency'
 import StepSize from './steps/StepSize'
 import StepInfo, { RAILWAY_URL } from './steps/StepInfo'
+import { isValidUrl } from './steps/StepLink'
 
+const TOTAL_STEPS = 6
 const initialForm = { name:'', email:'', phone:'', shipTo:'', notes:'' }
 
 export default function Wizard(){
@@ -15,6 +18,7 @@ export default function Wizard(){
   const [design, setDesign] = useState(null)
   const [outerColor, setOuterColor] = useState(null)
   const [innerColor, setInnerColor] = useState(null)
+  const [companionLink, setCompanionLink] = useState(null)
   const [frequency, setFrequency] = useState(null)
   const [size, setSize] = useState(null)
   const [form, setForm] = useState(initialForm)
@@ -25,9 +29,10 @@ export default function Wizard(){
   const canAdvance = {
     1: !!design,
     2: isCustom ? true : (!!outerColor && !!innerColor),
-    3: !!frequency,
-    4: !!size,
-    5: false, // step 5 advances via form submit, not Next
+    3: !!companionLink && (companionLink.type !== 'custom' || isValidUrl(companionLink.url || '')),
+    4: !!frequency,
+    5: !!size,
+    6: false, // final step advances via form submit / checkout, not Next
   }[step]
 
   const goTo = (n) => {
@@ -39,7 +44,7 @@ export default function Wizard(){
 
   const next = () => {
     if(!canAdvance) return
-    const n = Math.min(step + 1, 5)
+    const n = Math.min(step + 1, TOTAL_STEPS)
     setStep(n)
     setMaxReached(m => Math.max(m, n))
     scrollToTop()
@@ -72,6 +77,7 @@ export default function Wizard(){
           colors: outerColor?.asShown
             ? 'As shown in photos'
             : { outer: outerColor?.name, inner: innerColor?.name },
+          companionLink,
           frequency: `${frequency?.hz} Hz — ${frequency?.name}`,
           size,
           customer: form,
@@ -91,31 +97,34 @@ export default function Wizard(){
 
         {step === 1 && <StepDesign value={design} onChange={(d) => { setDesign(d); if(d.id!=='custom'){ setOuterColor(null); setInnerColor(null);} }}/>}
         {step === 2 && <StepColors design={design} outerColor={outerColor} innerColor={innerColor} onChangeOuter={setOuterColor} onChangeInner={setInnerColor}/>}
-        {step === 3 && <StepFrequency value={frequency} onChange={setFrequency}/>}
-        {step === 4 && <StepSize value={size} onChange={setSize}/>}
-        {step === 5 && (
+        {step === 3 && <StepLink value={companionLink} onChange={setCompanionLink}/>}
+        {step === 4 && <StepFrequency value={frequency} onChange={setFrequency}/>}
+        {step === 5 && <StepSize value={size} onChange={setSize}/>}
+        {step === 6 && (
           <StepInfo
-            order={{ design, outerColor, innerColor, frequency, size }}
+            order={{ design, outerColor, innerColor, companionLink, frequency, size }}
             form={form}
             onFormChange={setForm}
             status={status}
             onSubmit={handleSubmit}
           />
         )}
+      </div>
 
-        {status !== 'success' && (
-          <div className="wizard-nav">
+      {status !== 'success' && (
+        <div className="wizard-nav-bar">
+          <div className="wrap wizard-nav">
             <button type="button" className="btn btn-ghost" onClick={back} disabled={step === 1}>
               ← Back
             </button>
-            {step < 5 && (
+            {step < TOTAL_STEPS && (
               <button type="button" className={`btn btn-primary ${canAdvance ? 'pulse' : ''}`} onClick={next} disabled={!canAdvance}>
-                Continue →
+                {step === TOTAL_STEPS - 1 ? 'Finish →' : 'Next →'}
               </button>
             )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </section>
   )
 }

@@ -12,7 +12,7 @@ export default function StepColors({ design, outerColor, innerColor, onChangeOut
   return (
     <div>
       <div className="step-head">
-        <div className="eyebrow">STEP 2 OF 5</div>
+        <div className="eyebrow">STEP 2 OF 6</div>
         <h2>Choose your colors.</h2>
         <p>
           Pick a band color for the outer ring and the inner band — or keep
