@@ -32,11 +32,26 @@ export default function StepColors({ design, outerColor, innerColor, onChangeOut
       )}
 
       <div className="color-preview-row">
-        <div className="color-preview-ring">
-          <div className="cpr-outer" style={{ background: isAsShown || !outerColor ? 'var(--dust)' : outerColor.hex }}/>
-          <div className="cpr-inner" style={{ background: isAsShown || !innerColor ? 'var(--gold-p)' : innerColor.hex }}/>
+        {design?.photo && (
+          <div className="color-ref">
+            <div className="color-ref-photo">
+              <img src={design.photo} alt={design.name}/>
+            </div>
+            <span className="color-ref-label">{design.name} — as shown</span>
+          </div>
+        )}
+
+        <div className="color-ref">
+          <div className="color-preview-ring">
+            <div className="cpr-outer" style={{ background: isAsShown || !outerColor ? 'var(--dust)' : outerColor.hex }}/>
+            <div className="cpr-inner" style={{ background: isAsShown || !innerColor ? 'var(--gold-p)' : innerColor.hex }}/>
+          </div>
+          <span className="color-ref-label">
+            {isAsShown ? 'Same as photo' : 'Your custom colors'}
+          </span>
         </div>
-        <div>
+
+        <div className="color-preview-text">
           <button type="button" className={`btn ${isAsShown ? 'btn-primary' : 'btn-ghost'}`} onClick={pickAsShown}>
             {isAsShown ? 'Using colors as shown ✓' : 'Use colors as shown in photos'}
           </button>
