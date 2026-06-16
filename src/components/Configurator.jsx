@@ -71,16 +71,28 @@ export default function Wizard(){
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          design: design?.name,
-          designId: design?.id,
-          price: design?.price,
+          design: design?.name ?? '',
+          designId: design?.id ?? '',
+          price: design?.price ?? null,
           colors: outerColor?.asShown
             ? 'As shown in photos'
-            : { outer: outerColor?.name, inner: innerColor?.name },
-          companionLink,
-          frequency: `${frequency?.hz} Hz — ${frequency?.name}`,
-          size,
-          customer: form,
+            : isCustom
+              ? (form.notes ? 'See notes' : 'Custom — see notes')
+              : `${outerColor?.name ?? '—'} outer / ${innerColor?.name ?? '—'} inner`,
+          companionLink: companionLink
+            ? { type: companionLink.type, url: companionLink.url ?? null, verified: null, attempts: null }
+            : null,
+          frequency: frequency
+            ? `${frequency.hz} Hz — ${frequency.name}`
+            : '',
+          size: size ? parseInt(size, 10) : 0,
+          customer: {
+            name: form.name ?? '',
+            email: form.email ?? '',
+            phone: form.phone ?? '',
+            shipTo: form.shipTo ?? '',
+            notes: form.notes ?? '',
+          },
         }),
       })
       if(!res.ok) throw new Error('Request failed')
